@@ -16,12 +16,12 @@
             Search
           </button>
         </p>
-        <div class="box">
+        <div v-if ="profile.status" class="box">
           <article class="media">
             <div class="media-left">
               <figure class="image is-64x64">
                 <img
-                  :src="profile.ava"
+                  :src="profile.avatar"
                   alt="Image"
                 />
               </figure>
@@ -29,7 +29,7 @@
             <div class="media-content">
               <div class="content">
                 <p>
-                  <strong>John Smith</strong> <small>@johnsmith</small>
+                  <strong>{{profile.name}}</strong> <small>@ {{profile.login}}</small>
                   <small>31m</small>
                   <br />
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -79,20 +79,23 @@ export default {
         avatar: "",
         email: "",
         bio: "",
+        status:false
       },
       error: "",
     };
   },
   methods: {
-    searchAction: async function () {
-      await axios
+    searchAction:function () {
+      axios
         .get(this.url)
         .then((res) => {
+          console.log(res.data.login)
           this.profile.followers = res.data.followers;
           this.profile.following = res.data.following;
           this.profile.avatar = res.data.avatar_url;
           this.profile.email = res.data.email;
           this.profile.bio = res.data.bio;
+          this.profile.status = true;
         })
         .catch((error) => {
           this.error = error;
